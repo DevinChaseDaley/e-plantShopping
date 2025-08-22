@@ -19,13 +19,13 @@ export const CartSlice = createSlice({
         }
     },
     removeItem: (state, action) => {
-        state.items = state.items.filter(item => item.name !== action.payload);
+        state.items = state.items.filter(item => item.name !== action.payload.name);
     },
     updateQuantity: (state, action) => {
         const { name, quantity } = action.payload; // Destructure the product name and new quantity from the action payload
         // Find the item in the cart that matches the given name
         const itemToUpdate = state.items.find(item => item.name === name);
-        if (itemToUpdate) {
+        if (itemToUpdate && quantity > 0) {
         itemToUpdate.quantity = quantity; // If the item is found, update its quantity to the new value
         }
     },
