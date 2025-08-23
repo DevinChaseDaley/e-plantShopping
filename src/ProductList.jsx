@@ -11,6 +11,14 @@ function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.cart.items); // Access the cart items from Redux store
 
+    useEffect(() => {
+        const addedStatus = {};
+        cartItems.forEach(item => {
+            addedStatus[item.name] = true; // item is in cart
+        });
+        setAddedToCart(addedStatus);
+        }, [cartItems]);
+
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -248,6 +256,7 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(true); // Set showCart to true when cart icon is clicked
     };
+
     const handlePlantsClick = (e) => {
         e.preventDefault();
         setShowPlants(true); // Set showAboutUs to true when "About Us" link is clicked
@@ -321,21 +330,22 @@ function ProductList({ onHomeClick }) {
                         <div className="product-list"> {/* Container for the list of plant cards */}
                         {category.plants.map((plant, plantIndex) => ( // Loop through each plant in the current category
                             <div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
-                            <img 
-                                className="product-image" 
-                                src={plant.image} // Display the plant image
-                                alt={plant.name} // Alt text for accessibility
-                            />
-                            <div className="product-title">{plant.name}</div> {/* Display plant name */}
-                            {/* Display other plant details like description and cost */}
-                            <div className="product-description">{plant.description}</div> {/* Display plant description */}
-                            <div className="product-cost">{plant.cost}</div> {/* Display plant cost */}
-                            <button
-                                className="product-button"
-                                onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
-                            >
-                                Add to Cart
-                            </button>
+                                <img 
+                                    className="product-image" 
+                                    src={plant.image} // Display the plant image
+                                    alt={plant.name} // Alt text for accessibility
+                                />
+                                <div className="product-title">{plant.name}</div> {/* Display plant name */}
+                                <div className="product-description">{plant.description}</div> {/* Display plant description */}
+                                <div className="product-cost">{plant.cost}</div> {/* Display plant cost */}
+                                <button
+                                    className="product-button"
+                                    onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
+                                    disabled={addedToCart[plant.name]} // Disable button if plant is already added
+                                    hover={!addedToCart[plant.name]}
+                                >
+                                    Add to Cart
+                                </button>
                             </div>
                         ))}
                         </div>
